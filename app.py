@@ -112,30 +112,43 @@ if check_authenticated():
                 year = st.slider("Year", 1990, 2030, datetime.now().year)
             
             with col2:
-                # Get min and max values for numerical inputs
+                # Calculate default values for help text
+                avg_rain = float(df['average_rain_fall_mm_per_year'].mean())
+                avg_pesticides = float(df['pesticides_tonnes'].mean())
+                avg_temp = float(df['avg_temp'].mean())
+                
+                # Get min and max values for validation
                 min_rain = float(df['average_rain_fall_mm_per_year'].min())
                 max_rain = float(df['average_rain_fall_mm_per_year'].max())
-                
                 min_pesticides = float(df['pesticides_tonnes'].min())
                 max_pesticides = float(df['pesticides_tonnes'].max())
-                
                 min_temp = float(df['avg_temp'].min())
                 max_temp = float(df['avg_temp'].max())
                 
-                rain = st.slider("Average Rainfall (mm/year)", 
-                                min_value=int(min_rain), 
-                                max_value=int(max_rain), 
-                                value=int(df['average_rain_fall_mm_per_year'].mean()))
+                # Use text inputs instead of sliders
+                rain = st.number_input(
+                    "Average Rainfall (mm/year)",
+                    min_value=min_rain,
+                    max_value=max_rain,
+                    value=avg_rain,
+                    help=f"Enter a value between {min_rain:.1f} and {max_rain:.1f}. Average: {avg_rain:.1f}"
+                )
                 
-                pesticides = st.slider("Pesticides (tonnes)", 
-                                    min_value=float(min_pesticides), 
-                                    max_value=float(max_pesticides), 
-                                    value=float(df['pesticides_tonnes'].mean()))
+                pesticides = st.number_input(
+                    "Pesticides (tonnes)",
+                    min_value=min_pesticides,
+                    max_value=max_pesticides,
+                    value=avg_pesticides,
+                    help=f"Enter a value between {min_pesticides:.1f} and {max_pesticides:.1f}. Average: {avg_pesticides:.1f}"
+                )
                 
-                temp = st.slider("Average Temperature (°C)", 
-                                min_value=float(min_temp), 
-                                max_value=float(max_temp), 
-                                value=float(df['avg_temp'].mean()))
+                temp = st.number_input(
+                    "Average Temperature (°C)",
+                    min_value=min_temp,
+                    max_value=max_temp,
+                    value=avg_temp,
+                    help=f"Enter a value between {min_temp:.1f} and {max_temp:.1f}. Average: {avg_temp:.1f}"
+                )
             
             predict_button = st.form_submit_button("Predict Yield")
         
