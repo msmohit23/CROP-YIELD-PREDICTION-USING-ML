@@ -43,53 +43,77 @@ def load_data():
 
 df = load_data()
 
-# Sidebar
+# Check authentication status
+is_authenticated = check_authenticated()
+
+# Sidebar content
 st.sidebar.title("🌾 CropYield Predictor")
 st.sidebar.image("https://img.icons8.com/color/96/000000/farm.png", width=100)
 
-# Authentication
-auth_option = st.sidebar.radio("Authentication", ["Login", "Sign Up"])
-
-if auth_option == "Login":
-    with st.sidebar.form(key="login_form"):
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        login_button = st.form_submit_button("Login")
-        
-        if login_button:
-            if login(username, password):
-                st.session_state['authenticated'] = True
-                st.session_state['username'] = username
-                st.rerun()
-            else:
-                st.error("Invalid username or password")
-
-elif auth_option == "Sign Up":
-    with st.sidebar.form(key="signup_form"):
-        new_username = st.text_input("New Username")
-        new_password = st.text_input("New Password", type="password")
-        confirm_password = st.text_input("Confirm Password", type="password")
-        signup_button = st.form_submit_button("Sign Up")
-        
-        if signup_button:
-            if new_password != confirm_password:
-                st.error("Passwords do not match")
-            elif not new_username or not new_password:
-                st.error("Username and password cannot be empty")
-            else:
-                if signup(new_username, new_password):
-                    st.success("Account created successfully! You can now log in.")
+# Authentication UI section
+if not is_authenticated:
+    # Show only the authentication page
+    st.title("🌾 Crop Yield Prediction Tool")
+    st.header("Welcome to CropYield Predictor")
+    st.write("Please log in or sign up to access the prediction tool.")
+    
+    auth_option = st.radio("Authentication", ["Login", "Sign Up"])
+    
+    if auth_option == "Login":
+        with st.form(key="login_form"):
+            username = st.text_input("Username")
+            password = st.text_input("Password", type="password")
+            login_button = st.form_submit_button("Login")
+            
+            if login_button:
+                if login(username, password):
+                    st.session_state['authenticated'] = True
+                    st.session_state['username'] = username
+                    st.success("Login successful! Redirecting to the application...")
+                    st.rerun()
                 else:
-                    st.error("Username already exists")
+                    st.error("Invalid username or password")
+    
+    elif auth_option == "Sign Up":
+        with st.form(key="signup_form"):
+            new_username = st.text_input("New Username")
+            new_password = st.text_input("New Password", type="password")
+            confirm_password = st.text_input("Confirm Password", type="password")
+            signup_button = st.form_submit_button("Sign Up")
+            
+            if signup_button:
+                if new_password != confirm_password:
+                    st.error("Passwords do not match")
+                elif not new_username or not new_password:
+                    st.error("Username and password cannot be empty")
+                else:
+                    if signup(new_username, new_password):
+                        st.success("Account created successfully! You can now log in.")
+                    else:
+                        st.error("Username already exists")
+    
+    # Add some information about the tool
+    st.markdown("""
+    ## About This Tool
+    
+    This application helps farmers and agricultural analysts predict crop yields based on various factors:
+    
+    - **Country/Region**: Different regions have different soil types and agricultural practices
+    - **Crop Type**: Each crop has unique characteristics and yield potential
+    - **Climate Factors**: Rainfall and temperature significantly affect crop growth
+    - **Agricultural Inputs**: Pesticide usage impacts yield through pest control
+    
+    Sign up now to access the full features!
+    """)
 
-# Check authentication
-if check_authenticated():
+else:
+    # Show the logout button in sidebar for authenticated users
     st.sidebar.success(f"Logged in as {st.session_state['username']}")
     if st.sidebar.button("Logout"):
         logout()
         st.rerun()
     
-    # Main app content
+    # Main app content for authenticated users
     st.title("🌾 Crop Yield Prediction Tool")
     
     # Create tabs for different sections
@@ -428,39 +452,3 @@ if check_authenticated():
         
         Always combine these predictions with local agricultural knowledge for best results.
         """)
-else:
-    # Show welcome message for unauthenticated users
-    st.title("🌾 Welcome to the Crop Yield Prediction Tool")
-    
-    st.markdown("""
-    ### Predict crop yields with machine learning
-    
-    This application helps farmers and agricultural analysts predict crop yields based on various environmental and agricultural factors.
-    
-    #### Features:
-    - Predict yields for different crops and regions
-    - Analyze how rainfall, temperature, and pesticide usage affect yields
-    - Track your prediction history
-    - Download your prediction results
-    
-    #### Get Started:
-    Please sign up or log in using the sidebar to access the prediction tool.
-    """)
-    
-    # Display a sample visualization
-    st.subheader("Sample Data Visualization")
-    
-    # Create a sample chart
-    sample_data = df.groupby('Item')['hg/ha_yield'].mean().sort_values(ascending=False).head(10).reset_index()
-    
-    fig = px.bar(
-        sample_data,
-        x='Item',
-        y='hg/ha_yield',
-        title='Average Yield by Crop Type (Top 10)',
-        labels={'Item': 'Crop Type', 'hg/ha_yield': 'Average Yield (hg/ha)'},
-        color='hg/ha_yield',
-        color_continuous_scale='Greens'
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
