@@ -8,6 +8,13 @@ The system empowers farmers, agricultural experts, and policymakers to make data
 
 ---
 
+## 🔗 Live Demo
+
+🚀 **Check out the working project here**:  
+[🌐 Crop Yield Prediction App (Live)](https://91eb0d23-5108-485c-ad75-1ec213528b88-00-2esnowexc3zl9.sisko.replit.dev/)
+
+---
+
 ## 🚀 Features
 
 - 🌱 **AI-Driven Crop Yield Prediction**: Predicts yield using machine learning models trained on environmental and crop-specific data.
@@ -26,7 +33,7 @@ The system empowers farmers, agricultural experts, and policymakers to make data
 | Backend          | Python, Flask / Django              |
 | ML Models        | Scikit-learn, Pandas, XGBoost       |
 | Database         | SQLite / MySQL                      |
-| Deployment       | AWS / Heroku / Localhost            |
+| Deployment       | AWS / Heroku / Replit              |
 
 ---
 
