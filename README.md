@@ -10,7 +10,7 @@ The system empowers farmers, agricultural experts, and policymakers to make data
 
 ## 🔗 Live Demo
 
-🚀 **Check out the working project here**:  
+🚀 **Check out the working project here-**:  
 [🌐 Crop Yield Prediction App (Live)](https://91eb0d23-5108-485c-ad75-1ec213528b88-00-2esnowexc3zl9.sisko.replit.dev/)
 
 ---
